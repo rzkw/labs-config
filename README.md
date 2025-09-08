@@ -1,6 +1,6 @@
 # homelabs-config
 
-Various configuration files for my homelab. Includes ufw, fail2ban, SSH, Grafana Alloy.
+Various configuration files and resources for my labs. Includes ufw, fail2ban, SSH, Grafana Alloy, nginx, Tailscale and useful links I've used to build my server.
 
 Lab runs [Ubuntu Server 25](https://releases.ubuntu.com/plucky/) on bare metal. Other specs:
 
