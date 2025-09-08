@@ -1,4 +1,4 @@
-# homelabs-config
+# labs-config
 
 Various configuration files and resources for my labs. Includes ufw, fail2ban, SSH, Grafana Alloy, nginx, Tailscale and useful links I've used to build my server.
 
