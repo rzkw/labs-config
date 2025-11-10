@@ -11,3 +11,4 @@ Lab runs [Ubuntu Server 25](https://releases.ubuntu.com/plucky/) on bare metal. 
 - Graphics Card: Intel(R) HD Graphics (128 MB)
 
 Feedback always welcome!
+# bash-scripts
