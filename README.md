@@ -1,6 +1,4 @@
-# labs-config
-
-Various configuration files and resources for my labs. Includes ufw, fail2ban, SSH, Grafana Alloy, nginx, Tailscale and useful links I've used to build my server.
+Various configuration files and resources for labs. Includes ufw, fail2ban, SSH, Grafana Alloy, nginx, Tailscale and useful links I've used to build my server.
 
 Lab runs [Ubuntu Server 25](https://releases.ubuntu.com/plucky/) on bare metal. Other specs:
 
@@ -11,4 +9,3 @@ Lab runs [Ubuntu Server 25](https://releases.ubuntu.com/plucky/) on bare metal. 
 - Graphics Card: Intel(R) HD Graphics (128 MB)
 
 Feedback always welcome!
-# bash-scripts
