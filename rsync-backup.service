@@ -1,0 +1,7 @@
+[Unit]
+Description="Rsync /etc core directories backup script"
+
+[Service]
+ExecStart=/usr/local/bin/rsync-backup.sh
+Restart=on-failure
+RestartSec=5
