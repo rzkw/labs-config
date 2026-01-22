@@ -4,8 +4,8 @@ Description="Run /etc backup script 5min after boot and every 24h relative to ac
 [Timer]
 OnBootSec=5min
 OnUnitActiveSec=24h
-OnCalendar=Mon..Sun *-*-* 10:00:*
+OnCalendar=Mon..Sun *-*-* 10:00:00
 Unit=rsync-backup.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target
