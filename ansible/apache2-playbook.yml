@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become:  true
+  vars_files:
+    - vault.yaml
+  vars:
+    ansible_become_pass: "{{ password }}"
+    
+
+  tasks:
+    - name: Install Apache.
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+#    - name: Copy main config files
+#      copy:
+#        src: apache2.conf
+#        dest: /etc/apache2/conf/apache2.conf
+      
+#    - name: Copy vhosts config files
+#      copy: 
+#        src: apache2-vhosts.conf
+#        dest: /etc/apache2/conf/apache2-vhosts.conf
+    
+#    - name: Start Apache and configure it to run at boot.
+#      service:
+#        name: apache2
+#        state: started
+#        enabled: yes

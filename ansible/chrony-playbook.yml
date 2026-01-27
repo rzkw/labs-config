@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become:  true
+  vars_files:
+    - vault.yaml
+  vars:
+    ansible_become_pass: "{{ password }}"
+
+  tasks:
+    - name: Set timezone to Asia/Jakarta
+      community.general.timezone:
+        name: Asia/Jakarta
+
+    - name: Ensure chrony (for time sync is installed)
+      apt:
+        name: chrony
+        state: present
+        update_cache: yes
+
+    - name: deploy chrony.conf template
+      template:
+       src: /home/rizky/github/labs-config/ansible/chrony.conf.j2
+       dest: /etc/chrony/chrony.conf
+       owner: root
+       group: root
+       mode: 0644
+       backup: yes
+
+    - name: Ensure chrony is restarted
+      service:
+        name: chrony
+        state: restarted
+       
