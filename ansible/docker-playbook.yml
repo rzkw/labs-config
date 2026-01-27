@@ -1,3 +1,5 @@
+# Based on Digitalocean's guide combined with https://dev.to/lovestaco/install-docker-with-ansible-on-ubuntu-official-repo-docker-compose-578b
+
 ---
 - hosts: all
   become: true
