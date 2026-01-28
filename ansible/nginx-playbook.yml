@@ -1,0 +1,62 @@
+---
+
+-  name: Configure nginx
+   hosts: all
+   become: true
+   vars_files:
+    - vault.yaml
+   vars:
+     ansible_become_pass: "{{ password }}"
+
+   tasks: 
+    - name: install nginx
+      ansible.builtin.apt:
+        name: nginx
+
+    - name: install ufw
+      apt:
+        name: ufw
+
+#    - name: copy nginx config file
+#      ansible.builtin.copy:
+#        src: nginx.conf
+#        dest: /etc/nginx/conf.d/localhost.conf
+
+    - name: copy index.html
+      ansible.builtin.copy:
+        src: index.html
+        dest: /usr/share/nginx/html/index.html
+        mode: 0644
+      tags: ['deploy']
+
+    - name: restart nginx
+      ansible.builtin.service:
+       name: nginx
+       state: restarted
+      tags: ['deploy']
+
+# Fix incorrect index.html path in nginx.conf on managed hosts
+
+    - name: Check status 200 and fail if incorrect page contents
+      ansible.builtin.uri:
+        url: http://localhost/index.html
+        return_content: true
+      register: response
+      tags: ['deploy']
+
+    - name: Print result
+      ansible.builtin.debug:
+        var: response.content
+      tags: ['deploy', 'test']
+
+    - name: permit traffic in default zone for http service
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+
+    - name: restart ufw
+      ansible.builtin.service:
+        name=ufw
+        state=restarted
+
