@@ -1,0 +1,10 @@
+[Unit]
+Description="Rsync essential directories backup script"
+Requires=network-online.target
+
+[Service]
+ExecStartPre=-curl -m 10 --retry 5 https://hc-ping.com/3bbcc160-e0bf-4ba4-9031-cb0f4ed4dd67/start
+ExecStart=/usr/local/bin/rsync-backup.sh
+ExecStopPost=curl -m 10 --retry 5 https://hc-ping.com/3bbcc160-e0bf-4ba4-9031-cb0f4ed4dd67/${EXIT_STATUS}
+Restart=on-failure
+RestartSec=5
