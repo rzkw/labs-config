@@ -6,6 +6,8 @@ OnBootSec=5min
 OnUnitActiveSec=12h
 OnCalendar=Mon..Sun *-*-* 10:00:00
 Unit=rsync-backup.service
+Persistent=true
 
 [Install]
 WantedBy=timers.target
+
