@@ -1,0 +1,11 @@
+[Unit]
+Description="Run /etc backup script 5min after boot and every 12h relative to activation time"
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=12h
+OnCalendar=Mon..Sun *-*-* 10:00:00
+Unit=rsync-backup.service
+
+[Install]
+WantedBy=timers.target
