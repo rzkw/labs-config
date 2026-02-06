@@ -1,10 +1,19 @@
+# Checks whether server is connected and that destination backup directory is mounted
+
 [Unit]
 Description="Rsync essential directories backup script"
 Requires=network-online.target
+ConditionPathIsMountPoint=/media/acer-backup
 
 [Service]
+Type=oneshot
+
+# Signal start to healthchecks.io
 ExecStartPre=-curl -m 10 --retry 5 https://hc-ping.com/3bbcc160-e0bf-4ba4-9031-cb0f4ed4dd67/start
+
+# Run script
 ExecStart=/usr/local/bin/rsync-backup.sh
+
 ExecStopPost=curl -m 10 --retry 5 https://hc-ping.com/3bbcc160-e0bf-4ba4-9031-cb0f4ed4dd67/${EXIT_STATUS}
 Restart=on-failure
 RestartSec=5
