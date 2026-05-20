@@ -1,5 +1,10 @@
 theme = Ayu Mirage
 font-size = 20
 cursor-color = #FACC6E
-cursor-style = block
-cursor-style-blink = true
+
+# Don't integrate features from .zshrc; shows blinking block
+shell-integration-features = no-cursor
+
+background-blur = macos-glass-regular
+background-opacity = 0.4
+title = "👻"
