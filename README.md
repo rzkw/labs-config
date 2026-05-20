@@ -1,4 +1,4 @@
-Various configuration files and resources for labs. Includes ufw, fail2ban, SSH, Grafana Alloy, nginx, Tailscale and useful links I've used to build my server.
+Config files for my dev laptop and labs. 
 
 Lab runs [Ubuntu Server 25](https://releases.ubuntu.com/plucky/) on bare metal. Other specs:
 
