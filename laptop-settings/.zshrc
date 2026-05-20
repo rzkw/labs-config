@@ -134,3 +134,13 @@ zstyle ':vcs_info:git:*' formats '%b'
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+alias -g ls='eza -l'
+alias -g tree='eza -T'
+alias -g gs='git status'
+alias -g ga='git add'
+alias -g gc='git commit'
+alias -g gp='git push'
+alias -g gb='git branch'
+alias -g gch='git checkout'
+alias -g c='clear'
