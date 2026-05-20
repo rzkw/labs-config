@@ -1,0 +1,5 @@
+theme = Ayu Mirage
+font-size = 20
+cursor-color = #FACC6E
+cursor-style = block
+cursor-style-blink = true
