@@ -3,6 +3,8 @@
 ---
 - hosts: all
   become: true
+  vars:
+    docker_service: docker
 
   tasks:
     - name: Install aptitude
@@ -45,3 +47,5 @@
     - name: Ensure Docker service enabled and started
       ansible.builtin.service:
         name: "{{ docker_service }}"
+        state: started
+        enabled: yes
