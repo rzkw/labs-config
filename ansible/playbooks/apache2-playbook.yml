@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become:  true
+  vars_files:
+    - vault.yaml
+  vars:
+    ansible_become_pass: "{{ password }}"
+    
+
+  tasks:
+    - name: Install Apache.
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
