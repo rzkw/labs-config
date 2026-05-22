@@ -73,7 +73,7 @@ zstyle ':omz:update' frequency 7
 
 # Git, current branch, autosuggest, syntax highlighting
 
-plugins=(git branch colored-man-pages sudo web-search)
+plugins=(colored-man-pages sudo web-search)
 
 # Autosuggestions performance tweaks
 
@@ -100,11 +100,11 @@ fi
 
 # Prompt (while in Git)
 
-autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-zstyle ':vcs_info:git:*' formats '%b'
+#autoload -Uz vcs_info
+#precmd_vcs_info() { vcs_info }
+#precmd_functions+=( precmd_vcs_info )
+#setopt prompt_subst
+#zstyle ':vcs_info:git:*' formats '%b'
 
 # User configuration
 
@@ -144,3 +144,6 @@ alias -g gp='git push'
 alias -g gb='git branch'
 alias -g gch='git checkout'
 alias -g c='clear'
+
+# Force the cursor to be a blinking block (-ne = no newline, enable backslash escapes; 1 for blinking cursor, \e and q = escaping characters)
+echo -ne '\e[1 q'

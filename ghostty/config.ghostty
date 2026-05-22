@@ -1,0 +1,13 @@
+theme = Ayu Mirage
+font-size = 20
+cursor-color = #FACC6E
+
+# Don't integrate features from .zshrc; shows blinking block
+shell-integration-features = no-cursor
+
+background-blur = macos-glass-regular
+background-opacity = 0.4
+title = "👻"
+
+#Terminal type universally supported 
+term = xterm-256color
