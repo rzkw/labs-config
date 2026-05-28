@@ -1,6 +1,6 @@
 # Future Labs Roadmap
 
-Strategic vision for expanding the laboratory infrastructure and exploring new technologies.
+Rough ideas for expanding the lab infra and exploring new technologies.
 
 ## 1. Demo Playground VMs (Docker)
 - **Objective**: Create a sandboxed environment for testing and demonstrating Docker image builders and container lifecycles.
