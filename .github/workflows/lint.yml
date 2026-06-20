@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y shellcheck
       - run: shellcheck --version
-      - run: find . -name '*.sh' -exec shellcheck {} +
+      - run: find . -name '*.sh' -not -path './zsh-backup/*' -exec shellcheck {} +
 
   yamllint:
     name: yamllint

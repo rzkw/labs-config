@@ -21,6 +21,6 @@ echo "Backing up directories to /media/acer-backup"
 
 # Backup: create archive; recursive into dirs; verbose; update only files that are older; compress files during transfer
 
-rsync -arvuz -delete -stats $origin "$backupdir"/"$date-$time" 
+rsync -arvuz -delete -stats "$origin" "$backupdir"/"$date-$time" 
 
 echo "Backup complete"
