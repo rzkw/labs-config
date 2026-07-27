@@ -41,6 +41,7 @@
 - **Never force push.** `git push --force` is forbidden on any branch. Use `--force-with-lease` when necessary.
 - **Always rebase, never merge.** Keep a linear history. Use `git pull --rebase` to incorporate upstream changes.
 - **Rebase before every push.** Rebasing onto the target branch before pushing avoids merge conflicts.
+- **Branch isolation.** Every logical change gets its own branch. Never push unrelated commits onto an existing feature branch — create a new branch even if one is already checked out locally.
 
 ## Bash Token Optimization
 
