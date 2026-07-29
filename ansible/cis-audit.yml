@@ -1,0 +1,15 @@
+---
+- name: CIS Apple macOS 15.0 Sequoia L1+L2 Audit
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  roles:
+    - cis_audit
+
+  post_tasks:
+    - name: Print report path
+      ansible.builtin.debug:
+        msg: >-
+          Report saved to reports/
+          {{ ansible_date_time.date }}_cis_sequoia_l1+l2_report.md

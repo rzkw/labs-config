@@ -1,0 +1,37 @@
+# CIS Apple macOS 15.0 Sequoia L1+L2 Compliance Report
+
+**Host:** {{ hostname }}
+**Date:** {{ report_date }}
+**macOS Version:** {{ macos_version }}
+**Benchmark:** CIS Apple macOS 15.0 Sequoia v2.1.0
+
+---
+
+## Summary
+
+| Metric | L1 | L2 |
+|--------|-----|-----|
+| Total Checks | {{ l1_pass_count + l1_fail_count }} | {{ l2_pass_count + l2_fail_count }} |
+| Passed | {{ l1_pass_count }} | {{ l2_pass_count }} |
+| Failed | {{ l1_fail_count }} | {{ l2_fail_count }} |
+| Score | {{ (l1_pass_count / (l1_pass_count + l1_fail_count) * 100) | round(1) if (l1_pass_count + l1_fail_count) > 0 else 0 }}% | {{ (l2_pass_count / (l2_pass_count + l2_fail_count) * 100) | round(1) if (l2_pass_count + l2_fail_count) > 0 else 0 }}% |
+
+---
+
+## L1 Detailed Results
+
+{% for key, value in l1_results.items() | sort %}
+{% if key != "lastComplianceCheck" %}
+- **{{ key }}**: {{ "FAIL" if value else "PASS" }}
+{% endif %}
+{% endfor %}
+
+---
+
+## L2 Detailed Results
+
+{% for key, value in l2_results.items() | sort %}
+{% if key != "lastComplianceCheck" %}
+- **{{ key }}**: {{ "FAIL" if value else "PASS" }}
+{% endif %}
+{% endfor %}

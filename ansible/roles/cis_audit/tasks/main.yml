@@ -1,0 +1,119 @@
+---
+- name: Set mSCP paths
+  ansible.builtin.set_fact:
+    cis_audit_mscp_path: "{{ playbook_dir }}/../plans/sequoia-hardening"
+    cis_audit_l1_script: "{{ playbook_dir }}/../plans/sequoia-hardening/guidance_l1/cis_lvl1_macos_15.0_compliance.sh"
+    cis_audit_l2_script: "{{ playbook_dir }}/../plans/sequoia-hardening/guidance_l2/cis_lvl2_macos_15.0_compliance.sh"
+    cis_audit_l1_plist: /Library/Preferences/org.cis_lvl1_macos_15.0.audit.plist
+    cis_audit_l2_plist: /Library/Preferences/org.cis_lvl2_macos_15.0.audit.plist
+
+- name: Check L1 compliance script exists
+  ansible.builtin.stat:
+    path: "{{ cis_audit_l1_script }}"
+  register: cis_audit_l1_script_check
+
+- name: Fail if L1 compliance script not found
+  ansible.builtin.fail:
+    msg: "Run Task 2 first: generate L1 guidance via mSCP"
+  when: not cis_audit_l1_script_check.stat.exists
+
+- name: Run CIS L1 compliance check
+  ansible.builtin.command:
+    cmd: "{{ cis_audit_l1_script }} --check"
+  become: true
+  register: cis_audit_l1_compliance
+  changed_when: false
+  failed_when: false
+
+- name: Read L1 audit plist
+  ansible.builtin.command:
+    cmd: /usr/libexec/PlistBuddy -c "Print {{ cis_audit_l1_plist }}"
+  become: true
+  register: cis_audit_l1_plist_raw
+  changed_when: false
+  failed_when: false
+
+- name: Check L2 compliance script exists
+  ansible.builtin.stat:
+    path: "{{ cis_audit_l2_script }}"
+  register: cis_audit_l2_script_check
+
+- name: Fail if L2 compliance script not found
+  ansible.builtin.fail:
+    msg: "Run Task 3 first: generate L2 guidance via mSCP"
+  when: not cis_audit_l2_script_check.stat.exists
+
+- name: Run CIS L2 compliance check
+  ansible.builtin.command:
+    cmd: "{{ cis_audit_l2_script }} --check"
+  become: true
+  register: cis_audit_l2_compliance
+  changed_when: false
+  failed_when: false
+
+- name: Read L2 audit plist
+  ansible.builtin.command:
+    cmd: /usr/libexec/PlistBuddy -c "Print {{ cis_audit_l2_plist }}"
+  become: true
+  register: cis_audit_l2_plist_raw
+  changed_when: false
+  failed_when: false
+
+- name: Parse L1 plist into fact
+  ansible.builtin.set_fact:
+    cis_audit_l1_results: >-
+      {{ cis_audit_l1_plist_raw.stdout | from_yaml
+      if cis_audit_l1_plist_raw.rc == 0 else {} }}
+
+- name: Parse L2 plist into fact
+  ansible.builtin.set_fact:
+    cis_audit_l2_results: >-
+      {{ cis_audit_l2_plist_raw.stdout | from_yaml
+      if cis_audit_l2_plist_raw.rc == 0 else {} }}
+
+- name: Count L1 results
+  ansible.builtin.set_fact:
+    cis_audit_l1_pass_count: >-
+      {{ cis_audit_l1_results | dict2items
+      | selectattr('value', 'equalto', false)
+      | list | length }}
+    cis_audit_l1_fail_count: >-
+      {{ cis_audit_l1_results | dict2items
+      | selectattr('value', 'equalto', true)
+      | list | length }}
+
+- name: Count L2 results
+  ansible.builtin.set_fact:
+    cis_audit_l2_pass_count: >-
+      {{ cis_audit_l2_results | dict2items
+      | selectattr('value', 'equalto', false)
+      | list | length }}
+    cis_audit_l2_fail_count: >-
+      {{ cis_audit_l2_results | dict2items
+      | selectattr('value', 'equalto', true)
+      | list | length }}
+
+- name: Generate markdown report
+  ansible.builtin.template:
+    src: cis_report.md.j2
+    dest: /tmp/cis_report_{{ ansible_date_time.date }}.md
+    mode: "0644"
+  vars:
+    report_date: "{{ ansible_date_time.iso8601 }}"
+    hostname: "{{ ansible_hostname }}"
+    macos_version: "{{ ansible_distribution_version }}"
+    l1_results: "{{ cis_audit_l1_results }}"
+    l2_results: "{{ cis_audit_l2_results }}"
+    l1_pass_count: "{{ cis_audit_l1_pass_count }}"
+    l1_fail_count: "{{ cis_audit_l1_fail_count }}"
+    l2_pass_count: "{{ cis_audit_l2_pass_count }}"
+    l2_fail_count: "{{ cis_audit_l2_fail_count }}"
+
+- name: Copy report to reports/
+  ansible.builtin.copy:
+    src: /tmp/cis_report_{{ ansible_date_time.date }}.md
+    dest: >-
+      {{ playbook_dir }}/../reports/
+      {{ ansible_date_time.date }}_cis_sequoia_l1+l2_report.md
+    mode: "0644"
+  delegate_to: localhost
