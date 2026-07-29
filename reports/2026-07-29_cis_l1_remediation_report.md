@@ -1,6 +1,6 @@
 # CIS L1 Benchmark Remediation Report — 2026-07-29
 
-**Host:** Mac mini (Apple Silicon, arm64)  
+**Host:** macOS Sequoia 15.0 VM (Apple Silicon, arm64)  
 **OS:** macOS 15.0  
 **Baseline:** `cis_lvl1_macos_15.0` (MSCP Release 27.0)  
 **Date:** 2026-07-29  
@@ -8,16 +8,29 @@
 
 ## Summary
 
-| Metric | Before | After |
-|--------|--------|-------|
-| Passed | 40 | 87 |
-| Failed | 51 | 11 |
-| N/A | 1 | 1 |
-| **Compliance** | **~44%** | **88.78%** |
+| Phase | Scan | Passed | Failed | N/A | Compliance |
+|-------|------|--------|--------|-----|------------|
+| 1. Initial (L2) | `cis_lvl2_macos_15.0` | 23 | 94 | 1 | **22.45%** |
+| 2. Manual fixes | (operator applied known regressions) | ~40 | ~51 | 1 | **~44%** |
+| 3. After remediation | `cis_lvl1_macos_15.0` | 87 | 11 | 1 | **88.78%** |
+
+**Workflow:** The host started with a CIS L2 baseline scan (118 rules, 22.45% compliant). The operator manually applied common fixes (firewall, screensaver, loginwindow) bringing compliance to ~44%. This report documents the **L1 baseline** pass, where the remaining 51 failures were systematically remediated and rescanned.
 
 ---
 
-## Before: Initial Scan Failures (51 rules)
+## Phase 1: Initial L2 Baseline (22.45% Compliance)
+
+The very first scan used the L2 benchmark (more stringent). Only 23 of 118 rules passed.
+
+**Passed (23):** `audit_acls_files_configure`, `audit_acls_folders_configure`, `audit_control_acls_configure`, `audit_control_mode_configure`, `os_anti_virus_installed`, `os_authenticated_root_enable`, `os_guest_folder_removed`, `os_httpd_disable`, `os_mobile_file_integrity_enable`, `os_password_hint_remove`, `os_root_disable`, `os_sip_enable`, `os_sleep_and_display_sleep_apple_silicon_enable`, `os_software_update_deferral`, `os_sudoers_timestamp_type_configure`, `os_system_wide_applications_configure`, `os_time_server_enabled`, `os_world_writable_system_folder_configure`, `system_settings_hot_corners_secure`, `system_settings_printer_sharing_disable`, `system_settings_remote_management_disable`, `system_settings_software_update_download_enforce`, `system_settings_time_machine_encrypted_configure`
+
+**N/A (1):** `os_power_nap_disable`
+
+## Phase 2: Manual Operator Fixes (~44%)
+
+The operator manually applied fixes for commonly known regressions (firewall, screensaver, loginwindow settings), bringing the passed count to approximately 40. At this point a fresh L1 scan showed **40 passed, 51 failed, 1 N/A**.
+
+## Phase 3: Initial L1 Scan — Failures (51 rules)
 
 ### Audit (17)
 - `audit_auditd_enabled`, `audit_control_group_configure`, `audit_control_owner_configure`
