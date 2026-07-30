@@ -4,6 +4,11 @@
 - Always follow GitHub Flow: branch → implement → commit → push → PR → delete branch after merge
 - **Every commit must be followed by a PR**: after pushing, immediately open a PR using `gh pr create`
 
+## Plan Before Implementation
+- Always write a final implementation plan to `plans/<project-name>/<date>-<descriptive-name>.md` before writing any code.
+- If the plan file already exists, **do not overwrite it** — read it as the source of truth.
+- The plan must be committed and pushed to a branch, and reviewed via PR by admin/codeowner rzkw, before implementation begins.
+
 ## GitHub
 - Username: `agent-walkllc`
 - Email: `agent@walk-llc.com`
@@ -59,8 +64,17 @@ Example pattern:
 systemctl status docker containerd && df -h
 ```
 
+## Lint Before Run
+- **Always run `yamllint` and `ansible-lint` before executing any playbook.**
+- Fix all lint violations before running `ansible-playbook`.
+- This includes generated files — if they trigger false positives, configure `.yamllint` rather than bypassing the check.
+
 ## Docker
 - **Rootless context only.** Never switch to `default` or rootful context. Use `sg docker -c "..."` prefix if current session needs group membership.
+
+## PR Size
+- **Keep PRs focused and minimal.** Separate concerns: plan PR, implementation PR, generated content PRs.
+- If a change touches more than 5-8 files, ask before lumping them together.
 
 ## Boundaries
 

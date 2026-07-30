@@ -1,0 +1,3 @@
+---
+cis_audit_l1_plist: /Library/Preferences/org.cis_lvl1_macos_15.0.audit.plist
+cis_audit_l2_plist: /Library/Preferences/org.cis_lvl2_macos_15.0.audit.plist
