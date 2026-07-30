@@ -1,0 +1,31 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": true,
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "/Users/rizky/ponytail/.opencode/plugins/ponytail.mjs"
+  ],
+  "permission": "allow",
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GH_TOKEN}",
+        "X-MCP-Readonly": "true",
+        "X-MCP-Lockdown": "true",
+        "X-MCP-Toolsets": "context,repos,issues,projects,pull_requests,users,git,security_advisories"
+      }
+    },
+    "atlassian-rovo-mcp": {
+      "type": "remote",
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Basic YWdlbnRAd2Fsay1sbGMuY29tOkFUQVRUM3hGZkdGMFl2X2tfSVl2QnVlaXg1Y1pKaFVQczRrZkZXZXlTaHhUUFlaYzYwRHlvWUdRa004N3pYMlYxZ1Fib3NpUDgwdTRtdng2alFMQzNzdmtQb04yYTBSYURGa2x3bzU0U1J4LWt3emFqcjE1c1NTUW5uSUlVZkswM0NKMDJMVnB3SUlRcE9XRGZuc09IRFpYeklGeHMtenAyU2ZjSVNOVG9JZWNQamVoeHlPYkhoQT02MEY2MzQ2QQ=="
+      }
+    }
+  }
+}
