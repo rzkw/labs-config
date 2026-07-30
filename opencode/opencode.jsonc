@@ -24,7 +24,7 @@
       "url": "https://mcp.atlassian.com/v1/mcp/authv2",
       "enabled": true,
       "headers": {
-        "Authorization": "Basic YWdlbnRAd2Fsay1sbGMuY29tOkFUQVRUM3hGZkdGMFl2X2tfSVl2QnVlaXg1Y1pKaFVQczRrZkZXZXlTaHhUUFlaYzYwRHlvWUdRa004N3pYMlYxZ1Fib3NpUDgwdTRtdng2alFMQzNzdmtQb04yYTBSYURGa2x3bzU0U1J4LWt3emFqcjE1c1NTUW5uSUlVZkswM0NKMDJMVnB3SUlRcE9XRGZuc09IRFpYeklGeHMtenAyU2ZjSVNOVG9JZWNQamVoeHlPYkhoQT02MEY2MzQ2QQ=="
+        "Authorization": "Basic {env:ATLASSIAN_MCP}"
       }
     }
   }
