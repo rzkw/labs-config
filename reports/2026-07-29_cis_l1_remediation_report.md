@@ -399,3 +399,23 @@ system_settings_time_server_enforce,passed,true,true
 system_settings_wake_network_access_disable,failed,,0
 system_settings_wifi_menu_enable,passed,18,18
 ```
+
+---
+
+## Post-Remediation Follow-up (2026-07-30)
+
+### Password policy rollback
+
+The CIS L1 `--fix` applied `pwpolicy` rules (minimum 15-character length, 365-day expiry, 24-password history). This caused macOS to prompt for a password change on every login — the user's current password did not meet the 15-character minimum, and the `pwpolicy -clearaccountpolicies` + `-setaccountpolicies` cycle altered the global policy state.
+
+**Fix:** `sudo pwpolicy -clearaccountpolicies` removed all enforced password policies. The user will get one final password-change prompt on next login, after which no further prompts will appear. All other CIS hardening (firewall, screensaver, SSH disable, MCX defaults) remains in place.
+
+### Passwordless sudo removal
+
+The `/etc/sudoers.d/mscp` file, added during the audit for convenience, was originally planned to include a `NOPASSWD` entry. After the password policy revert, the `mscp` file was cleaned up to only contain:
+```
+Defaults log_allowed
+Defaults timestamp_timeout=0
+```
+No passwordless sudo remains. Every `sudo` invocation now requires authentication, and the `timestamp_timeout=0` setting ensures credentials are never cached between commands.
+```
