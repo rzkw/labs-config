@@ -19,13 +19,6 @@
         "X-MCP-Toolsets": "context,repos,issues,projects,pull_requests,users,git,security_advisories"
       }
     },
-    "atlassian-rovo-mcp": {
-      "type": "remote",
-      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
-      "enabled": true,
-      "headers": {
-        "Authorization": "Basic {env:ATLASSIAN_MCP}"
-      }
     }
   }
 }
