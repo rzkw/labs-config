@@ -18,7 +18,6 @@
         "X-MCP-Lockdown": "true",
         "X-MCP-Toolsets": "context,repos,issues,projects,pull_requests,users,git,security_advisories"
       }
-    },
     }
-  }
+    }
 }
