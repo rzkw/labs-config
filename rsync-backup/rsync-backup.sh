@@ -1,5 +1,13 @@
+# Edit 08/08/2026: Script backing up set of dirs from dev server to mounted logical volume. Exits if not run as root. Files in destination deleted if no longer in source. 
+#
+# Installed as systemd service with scheduled timer, logs through journalctl. 
+#
+# References: https://wellquite.org/posts/backups/; https://www.youtube.com/watch?v=5pzUM4CEtaY
+#
+# Full writeup: https://medium.com/@walkable-llc/scheduled-backups-with-rsync-e06725246df4
+
+
 #!/bin/bash
-# Script to backup directories of acerubuntuserver to mounted USB stick/logical volume
 
 # Set variables, destination directory, origin directories (some require root access)
 
