@@ -57,6 +57,15 @@ Host group `cis_lvl2`, `become: yes`, `vars`: `mscp_script_src` pointing at the 
 - `pwpolicy_minimum_length_enforce`
 - `pwpolicy_special_character_enforce`
 
+**Hardware/MDM-dependent (per reviewer, disabled):**
+- `system_settings_filevault_enforce`
+- `system_settings_time_machine_auto_backup_enable`
+- `system_settings_time_machine_encrypted_configure`
+- `os_sleep_and_display_sleep_apple_silicon_enable`
+- `os_time_server_enabled`
+- `system_settings_time_server_configure`
+- `system_settings_time_server_enforce`
+
 ## GUI / headless settings — APPLIED (not skipped), per user instruction
 
 These run through the script and are disabled/enforced by the benchmark (all "disable" direction already):
@@ -64,14 +73,14 @@ These run through the script and are disabled/enforced by the benchmark (all "di
 
 ## Not in playbook
 
-Only the 9 exempted rules above (SSH + password policy). Everything else in the L2 profile runs.
+Only the 16 exempted rules above (SSH + password policy + FileVault/Time Machine/sleep/time-server). Everything else in the L2 profile runs.
 
 ## Verification
 
 - `yamllint` and `ansible-lint` on playbook + plan YAML.
-- Placeholder inventory uses `ansible_host`/`ansible_user` vars so the real VM is wired without code changes.
+- Inventory targets `localhost` (`connection: local`, `ansible_user=rizky`).
 
 ## Open items
 
-- Inventory `cis-lvl2.ini` ships with placeholder host `cis-lvl2-vm` — user fills in SSH host/user (or replaces with real inventory).
-- `FileVault`, `Time Machine`, Sleep/Display-Sleep, Time-Server controls are hardware/MDM-dependent; script reports them as findings if inapplicable — acceptable for headless, left to run.
+- None — inventory targets the local machine (`localhost` / `rizky`) per reviewer.
+- `FileVault`, `Time Machine`, Sleep/Display-Sleep, Time-Server are disabled (exempt) per reviewer; they are hardware/MDM-dependent and not applied on this local headless machine.
