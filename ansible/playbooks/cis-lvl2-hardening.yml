@@ -1,0 +1,75 @@
+---
+- name: CIS macOS 15.0 Level 2 hardening (headless VM)
+  hosts: cis_lvl2
+  become: true
+  gather_facts: false
+  vars:
+    mscp_script_src: "{{ playbook_dir }}/../../plans/sequoia-hardening/guidance_l2/cis_lvl2_macos_15.0_compliance.sh"
+    mscp_script_dest: /usr/local/bin/cis_lvl2_macos_15.0_compliance.sh
+    mscp_baseline: org.cis_lvl2_macos_15.0.audit
+    mscp_exempt_reason: "Not applied: SSH kept for access / password policy excluded per headless VM policy"
+    exempted_rules:
+      - system_settings_ssh_disable
+      - pwpolicy_account_lockout_enforce
+      - pwpolicy_account_lockout_timeout_enforce
+      - pwpolicy_alpha_numeric_enforce
+      - pwpolicy_custom_regex_enforce
+      - pwpolicy_history_enforce
+      - pwpolicy_max_lifetime_enforce
+      - pwpolicy_minimum_length_enforce
+      - pwpolicy_special_character_enforce
+
+  tasks:
+    - name: Deploy NIST mSCP compliance script
+      ansible.builtin.copy:
+        src: "{{ mscp_script_src }}"
+        dest: "{{ mscp_script_dest }}"
+        mode: "0755"
+        remote_src: false
+
+    - name: Pre-seed exemptions (SSH kept, password policy excluded)
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/defaults
+          - write
+          - "{{ mscp_baseline }}"
+          - "{{ item }}"
+          - -dict-add
+          - exempt
+          - "1"
+          - exempt_reason
+          - "{{ mscp_exempt_reason }}"
+      loop: "{{ exempted_rules }}"
+      changed_when: true
+
+    - name: Run compliance check -> remediate -> re-check
+      ansible.builtin.command: "{{ mscp_script_dest }} --cfc"
+      register: mscp_cfc
+      changed_when: true
+      ignore_errors: true
+
+    - name: Show non-compliant rules
+      ansible.builtin.command: "{{ mscp_script_dest }} --non-compliant"
+      register: mscp_noncompliant
+      changed_when: false
+      ignore_errors: true
+
+    - name: Show compliance stats
+      ansible.builtin.command: "{{ mscp_script_dest }} --stats"
+      register: mscp_stats
+      changed_when: false
+      ignore_errors: true
+
+    - name: Assert SSH was NOT disabled (server retained)
+      ansible.builtin.command: /bin/launchctl print-disabled system
+      register: ssh_state
+      changed_when: false
+      failed_when: "'\"com.openssh.sshd\" => disabled' in ssh_state.stdout"
+
+    - name: Report results
+      ansible.builtin.debug:
+        msg:
+          - "Remediation run (truncated): {{ mscp_cfc.stdout_lines | default([]) | last(3) }}"
+          - "Non-compliant rules: {{ mscp_noncompliant.stdout | default('(none output)') }}"
+          - "Stats: {{ mscp_stats.stdout | default('(none output)') }}"
+          - "SSH state check passed (server retained)."
