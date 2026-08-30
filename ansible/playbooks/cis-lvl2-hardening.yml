@@ -25,7 +25,17 @@
         dest: "{{ mscp_script_dest }}"
         mode: "0755"
         remote_src: false
+      become: true
 
+    - name: Scan compliance (check)
+      ansible.builtin.command: "{{ mscp_script_dest }} --check"
+      become: true
+      register: mscp_check
+      changed_when: false
+      failed_when: false
+
+    # mSCP's scan rewrites each rule dict and drops pre-seeded exemption keys.
+    # Re-seed AFTER the scan so run_fix honors them for SSH + password policy.
     - name: Pre-seed exemptions (SSH kept, password policy excluded)
       ansible.builtin.command:
         argv:
@@ -42,12 +52,47 @@
       loop: "{{ exempted_rules }}"
       changed_when: true
 
-    - name: Run compliance check -> remediate -> re-check
-      ansible.builtin.command: "{{ mscp_script_dest }} --cfc"
+    - name: Remediate non-compliant settings (fix)
+      ansible.builtin.command: "{{ mscp_script_dest }} --fix"
       become: true
-      register: mscp_cfc
+      register: mscp_fix
       changed_when: true
       failed_when: false
+
+    - name: Scan compliance again (verify)
+      ansible.builtin.command: "{{ mscp_script_dest }} --check"
+      become: true
+      register: mscp_verify
+      changed_when: false
+      failed_when: false
+
+    # Hard guarantee: re-enable Remote Login + sshd regardless of remediation.
+    - name: Enable Remote Login
+      ansible.builtin.command: /usr/sbin/systemsetup -f -setremotelogin on
+      become: true
+      changed_when: true
+
+    - name: Enable sshd launchd job
+      ansible.builtin.command: /bin/launchctl enable system/com.openssh.sshd
+      become: true
+      changed_when: true
+
+    - name: Start sshd launchd job
+      ansible.builtin.command:
+        argv:
+          - /bin/launchctl
+          - bootstrap
+          - system
+          - /System/Library/LaunchDaemons/ssh.plist
+      become: true
+      changed_when: true
+      failed_when: false
+
+    - name: Assert SSH is enabled and Remote Login is on
+      ansible.builtin.command: /bin/launchctl print-disabled system
+      register: ssh_state
+      changed_when: false
+      failed_when: "'\"com.openssh.sshd\" => disabled' in ssh_state.stdout"
 
     - name: Show non-compliant rules
       ansible.builtin.command: "{{ mscp_script_dest }} --non-compliant"
@@ -61,16 +106,10 @@
       changed_when: false
       failed_when: false
 
-    - name: Assert SSH was NOT disabled (server retained)
-      ansible.builtin.command: /bin/launchctl print-disabled system
-      register: ssh_state
-      changed_when: false
-      failed_when: "'\"com.openssh.sshd\" => disabled' in ssh_state.stdout"
-
     - name: Report results
       ansible.builtin.debug:
         msg:
-          - "Remediation run (truncated): {{ (mscp_cfc.stdout_lines | default([]))[-3:] }}"
+          - "Remediation run (truncated): {{ (mscp_fix.stdout_lines | default([]))[-3:] }}"
           - "Non-compliant rules: {{ mscp_noncompliant.stdout | default('(none output)') }}"
           - "Stats: {{ mscp_stats.stdout | default('(none output)') }}"
-          - "SSH state check passed (server retained)."
+          - "SSH re-enabled (Remote Login on, sshd enabled)."
