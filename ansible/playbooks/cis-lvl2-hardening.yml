@@ -7,7 +7,7 @@
     mscp_script_src: "{{ playbook_dir }}/../../plans/sequoia-hardening/guidance_l2/cis_lvl2_macos_15.0_compliance.sh"
     mscp_script_dest: /usr/local/bin/cis_lvl2_macos_15.0_compliance.sh
     mscp_baseline: org.cis_lvl2_macos_15.0.audit
-    mscp_exempt_reason: "Not applied: SSH retained; password/FV/TimeMachine/sleep/time-server excluded"
+    mscp_exempt_reason: "Not applied: SSH retained; password policy excluded per headless VM policy"
     exempted_rules:
       - system_settings_ssh_disable
       - pwpolicy_account_lockout_enforce
@@ -18,13 +18,6 @@
       - pwpolicy_max_lifetime_enforce
       - pwpolicy_minimum_length_enforce
       - pwpolicy_special_character_enforce
-      - system_settings_filevault_enforce
-      - system_settings_time_machine_auto_backup_enable
-      - system_settings_time_machine_encrypted_configure
-      - os_sleep_and_display_sleep_apple_silicon_enable
-      - os_time_server_enabled
-      - system_settings_time_server_configure
-      - system_settings_time_server_enforce
 
   tasks:
     - name: Deploy NIST mSCP compliance script
