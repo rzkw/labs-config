@@ -1,7 +1,6 @@
 ---
 - name: CIS macOS 15.0 Level 2 hardening (headless VM)
   hosts: cis_lvl2
-  become: true
   gather_facts: false
   vars:
     mscp_script_src: "{{ playbook_dir }}/../../plans/sequoia-hardening/guidance_l2/cis_lvl2_macos_15.0_compliance.sh"
@@ -39,26 +38,28 @@
           - "1"
           - exempt_reason
           - "{{ mscp_exempt_reason }}"
+      become: true
       loop: "{{ exempted_rules }}"
       changed_when: true
 
     - name: Run compliance check -> remediate -> re-check
       ansible.builtin.command: "{{ mscp_script_dest }} --cfc"
+      become: true
       register: mscp_cfc
       changed_when: true
-      ignore_errors: true
+      failed_when: false
 
     - name: Show non-compliant rules
       ansible.builtin.command: "{{ mscp_script_dest }} --non-compliant"
       register: mscp_noncompliant
       changed_when: false
-      ignore_errors: true
+      failed_when: false
 
     - name: Show compliance stats
       ansible.builtin.command: "{{ mscp_script_dest }} --stats"
       register: mscp_stats
       changed_when: false
-      ignore_errors: true
+      failed_when: false
 
     - name: Assert SSH was NOT disabled (server retained)
       ansible.builtin.command: /bin/launchctl print-disabled system
@@ -69,7 +70,7 @@
     - name: Report results
       ansible.builtin.debug:
         msg:
-          - "Remediation run (truncated): {{ mscp_cfc.stdout_lines | default([]) | last(3) }}"
+          - "Remediation run (truncated): {{ (mscp_cfc.stdout_lines | default([]))[-3:] }}"
           - "Non-compliant rules: {{ mscp_noncompliant.stdout | default('(none output)') }}"
           - "Stats: {{ mscp_stats.stdout | default('(none output)') }}"
           - "SSH state check passed (server retained)."
