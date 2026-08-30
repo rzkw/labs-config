@@ -57,23 +57,15 @@ Host group `cis_lvl2`, `become: yes`, `vars`: `mscp_script_src` pointing at the 
 - `pwpolicy_minimum_length_enforce`
 - `pwpolicy_special_character_enforce`
 
-**Hardware/MDM-dependent (per reviewer, disabled):**
-- `system_settings_filevault_enforce`
-- `system_settings_time_machine_auto_backup_enable`
-- `system_settings_time_machine_encrypted_configure`
-- `os_sleep_and_display_sleep_apple_silicon_enable`
-- `os_time_server_enabled`
-- `system_settings_time_server_configure`
-- `system_settings_time_server_enforce`
-
-## GUI / headless settings — APPLIED (not skipped), per user instruction
+## GUI / headless settings — APPLIED (disabled, not skipped)
 
 These run through the script and are disabled/enforced by the benchmark (all "disable" direction already):
 - AirPlay receiver, Bluetooth (menu enable, sharing disable), Wi-Fi menu, Safari ×6, show filename extensions, Terminal secure keyboard, hot corners, screen saver + session lock, login window (message, prompt user/pw), guest account + guest SMB, Siri + Improve Siri/dictation + Improve search + Improve assistive voice, personalized advertising, password hints, location services (+ menu).
+- **FileVault, Time Machine (auto-backup + encrypted), Sleep/Display-Sleep (Apple Silicon), Time-Server** — per reviewer, these are **disabled** (applied), not exempted: FileVault off, Time Machine off, sleep/display-sleep disabled, time server settings enforced.
 
 ## Not in playbook
 
-Only the 16 exempted rules above (SSH + password policy + FileVault/Time Machine/sleep/time-server). Everything else in the L2 profile runs.
+Only the 9 exempted rules above (SSH + password policy). Everything else in the L2 profile runs — including FileVault, Time Machine, Sleep/Display-Sleep, and Time-Server, which are **disabled** per reviewer.
 
 ## Verification
 
@@ -83,4 +75,4 @@ Only the 16 exempted rules above (SSH + password policy + FileVault/Time Machine
 ## Open items
 
 - None — inventory targets the local machine (`localhost` / `rizky`) per reviewer.
-- `FileVault`, `Time Machine`, Sleep/Display-Sleep, Time-Server are disabled (exempt) per reviewer; they are hardware/MDM-dependent and not applied on this local headless machine.
+- `FileVault`, `Time Machine`, Sleep/Display-Sleep, Time-Server are **applied (disabled)** per reviewer, not exempted.
