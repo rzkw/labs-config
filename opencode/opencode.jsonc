@@ -1,30 +1,34 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "formatter": true,
-  "plugin": [
+  "plugins": [
     "superpowers@git+https://github.com/obra/superpowers.git",
     "/Users/rizky/ponytail/.opencode/plugins/ponytail.mjs"
   ],
-  "permission": "allow",
+  "permissions": [
+    { "action": "*", "resource": "*", "effect": "allow" }
+  ],
   "mcp": {
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "enabled": true,
-      "oauth": false,
-      "headers": {
-        "Authorization": "Bearer {env:GH_TOKEN}",
-        "X-MCP-Readonly": "true",
-        "X-MCP-Lockdown": "true",
-        "X-MCP-Toolsets": "context,repos,issues,projects,pull_requests,users,git,security_advisories"
-      }
-    },
-    "ansible": {
-      "type": "local",
-      "command": ["npx", "-y", "@ansible/ansible-mcp-server", "--stdio"],
-      "enabled": true,
-      "environment": {
-        "WORKSPACE_ROOT": "."
+    "servers": {
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp/",
+        "disabled": false,
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {env:GH_TOKEN}",
+          "X-MCP-Readonly": "true",
+          "X-MCP-Lockdown": "true",
+          "X-MCP-Toolsets": "context,repos,issues,projects,pull_requests,users,git,security_advisories"
+        }
+      },
+      "ansible": {
+        "type": "local",
+        "command": ["npx", "-y", "@ansible/ansible-mcp-server", "--stdio"],
+        "disabled": false,
+        "environment": {
+          "WORKSPACE_ROOT": "."
+        }
       }
     }
   }
