@@ -13,7 +13,6 @@
 - Username: `agent-walkllc`
 - Email: `agent@walk-llc.com`
 - gh CLI: authenticated (OAuth token, scopes: gist, read:org, repo)
-- MCP PAT: `GitHub_MCP_PAT` in Bitwarden (30-day expiry, scopes: repo, project, read:user, read:org, gist)
 
 ## Bitwarden
 - Email: `agent@walk-llc.com`
@@ -24,11 +23,6 @@
 - Auth key: `~/.ssh/id_ed25519`
 - Signing key: `~/.ssh/agent-gh-signing` (ed25519, registered as commit signing key)
 - Config: `~/.ssh/config` with `Host github.com` entry
-
-## MCP Configuration
-- Global: `~/.config/opencode/opencode.jsonc` → `https://api.github.com/mcp`
-- Project: `.mcp.json` in workspace
-- Auth: `GH_TOKEN` from Bitwarden via direnv
 
 ## Git Protocol
 - HTTPS via gh CLI OAuth token (git_protocol = https)
